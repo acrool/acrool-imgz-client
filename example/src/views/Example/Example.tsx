@@ -22,7 +22,7 @@ const Example = () => {
      * @param data
      */
     const handleSubmitHandler: SubmitHandler<IForm> = useCallback(async formData => {
-        const imgzClient = new ImgzClient('/api');
+        const imgzClient = new ImgzClient();
 
         const options = {
             resize: {width: 250},

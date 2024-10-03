@@ -1,6 +1,9 @@
 import axios, {AxiosInstance} from 'axios';
 import {TFormat} from './types';
 import {base64ToBlob, base64ToBlobWithContentType} from '@acrool/js-utils/convert';
+import {interceptorsResponseFulfilled, interceptorsResponseReject} from './axios/interceptors';
+import {createAxiosInstance} from './axios/config';
+import fs from "fs";
 
 // 壓縮選項介面
 interface SquashOptions {
@@ -14,26 +17,29 @@ class ImgzClient {
     private axiosInstance: AxiosInstance;
 
     constructor(baseURL?: string) {
-        this.axiosInstance = axios.create({
-            baseURL,
-            method: 'post',
-            headers: {
-                responseType: 'arraybuffer',
-                'Content-Type': 'multipart/form-data',
-                'Cache-Control': 'no-cache',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            timeout: 1200 * 1000,
-        });
-
+        this.axiosInstance = createAxiosInstance(baseURL);
     }
 
 
     private poster = (format: TFormat, data: any) => {
         return this.axiosInstance({
-            url: `/squash/${format}/download`,
+            // url: `/api/squash/${format}/download`,
+            url: `/api/squash/${format}`,
             data,
+            responseType: 'arraybuffer',
+            // responseType: 'blob',
+            // responseType: 'json',
+        });
+    };
+
+    private downloadPoster = (format: TFormat, data: any) => {
+        return this.axiosInstance({
+            // url: `/api/squash/${format}/download`,
+            url: `/api/squash/${format}/download`,
+            data,
+            // responseType: 'arraybuffer',
             responseType: 'blob',
+            // responseType: 'json',
         });
     };
 
@@ -53,10 +59,7 @@ class ImgzClient {
             sourceFile,
         };
 
-        const response = await this.poster(format, requestData);
-        // this.result = base64ToBlob(response.data, `image/${format}`);
-        // console.log('this.result', response.data);
-        // this.result = new Blob([response.data], {type: 'image/webp'});
+        const response = await this.downloadPoster(format, requestData);
 
         this.result = response.data;
         return this;
@@ -69,12 +72,11 @@ class ImgzClient {
     ): Promise<this> {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const fs = require('fs');
-        const sourceFile = fs.readFileSync(originFile); // 後端讀取檔案為 Buffer
+        // const sourceFile = fs.readFileSync(originFile); // 後端讀取檔案為 Buffer
 
         const requestData = {
-            sourceFile,
-            options,
-            format,
+            ...options,
+            sourceFile: fs.createReadStream(originFile),
         };
 
         const response = await this.poster(format, requestData);
