@@ -22,7 +22,7 @@ const Example = () => {
      * @param data
      */
     const handleSubmitHandler: SubmitHandler<IForm> = useCallback(async formData => {
-        const imgzClient = new ImgzClient('/api');
+        const imgzClient = new ImgzClient();
 
         const options = {
             resize: {width: 250},
@@ -31,10 +31,7 @@ const Example = () => {
         };
         await imgzClient
             .squashWebp(formData.sourceFile[0], options)
-            .then(client => {
-                const url = client.toBlobUrl();
-                setBlobImg(url);
-            });
+            .then(setBlobImg);
 
     }, []);
 
