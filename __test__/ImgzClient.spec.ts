@@ -1,6 +1,7 @@
 import * as path from 'path';
 import Docker from 'dockerode';
-import ImgzClient from '../src/ImgzClient';
+import {saveFile} from '../src/utils';
+import ImgzClient from '../src/ImgzNodeClient';
 import axios from 'axios';
 
 const docker = new Docker();
@@ -76,6 +77,7 @@ describe('Test for real server', () => {
         await imgzClient
             .squashWebp(filePath, options)
             .then(client => {
+                client.save(uploadIOPath);
             });
 
 
