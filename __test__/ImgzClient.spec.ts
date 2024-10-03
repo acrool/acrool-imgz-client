@@ -82,7 +82,7 @@ describe('Test for real server', () => {
     
     test('squash should compress an image and save it to the specified path', async () => {
 
-        const imgzClient = new ImgzClient('http://localhost:8081');
+        const imgzClient = new ImgzClient('http://localhost:8082');
 
         const options = {
             resize: {width: 500},
@@ -92,14 +92,17 @@ describe('Test for real server', () => {
             resize: {width: 100},
             quality: 80,
         };
-        await imgzClient
+        imgzClient
             .squashWebp(filePath)
-            .toSave(uploadIOThumbPath, thumbOptions)
-            .toSave(uploadIOPath, options)
+            .toSave(uploadIOThumbPath, thumbOptions);
+
+        imgzClient.toSave(uploadIOPath, options);
+
+        await imgzClient
             .completeAll();
 
 
         expect(fs.existsSync(uploadIOThumbPath)).toBe(true);
         expect(fs.existsSync(uploadIOPath)).toBe(true);
-    });
+    }, 12000);
 });
