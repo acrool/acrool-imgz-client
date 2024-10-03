@@ -1,5 +1,6 @@
 import axios, {AxiosInstance} from 'axios';
 import {TFormat} from './types';
+import {base64ToBlob, base64ToBlobWithContentType} from '@acrool/js-utils/convert';
 
 // 壓縮選項介面
 interface SquashOptions {
@@ -30,8 +31,9 @@ class ImgzClient {
 
     private poster = (format: TFormat, data: any) => {
         return this.axiosInstance({
-            url: `/squash/${format}`,
+            url: `/squash/${format}/download`,
             data,
+            responseType: 'blob',
         });
     };
 
@@ -52,8 +54,11 @@ class ImgzClient {
         };
 
         const response = await this.poster(format, requestData);
+        // this.result = base64ToBlob(response.data, `image/${format}`);
+        // console.log('this.result', response.data);
+        // this.result = new Blob([response.data], {type: 'image/webp'});
 
-        this.result = new Blob([response.data], {type: 'image/' + format});
+        this.result = response.data;
         return this;
     }
 
@@ -140,8 +145,10 @@ class ImgzClient {
 
     // 前端：返回 Blob URL
     public toBlobUrl(): string {
-        if (!this.result) throw new Error('無可用的圖片結果');
-        if (!(this.result instanceof Blob)) throw new Error('結果不是 Blob 格式');
+        // if (!this.result) throw new Error('無可用的圖片結果');
+        // if (!(this.result instanceof Blob)) throw new Error('結果不是 Blob 格式');
+        // return this.result;
+        // return `data:image/webp;base64,${this.result}`;
         return URL.createObjectURL(this.result);
     }
 

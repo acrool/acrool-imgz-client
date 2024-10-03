@@ -32,7 +32,8 @@ const Example = () => {
         await imgzClient
             .squashWebp(formData.sourceFile[0], options)
             .then(client => {
-                setBlobImg(client.toBlobUrl);
+                const url = client.toBlobUrl();
+                setBlobImg(url);
             });
 
     }, []);
