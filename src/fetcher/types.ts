@@ -31,6 +31,10 @@ export interface ISquashResult {
 
 export type TResponseType = 'blob'|'arraybuffer';
 
+
+export interface IAxiosInstanceOptions {
+    timeout?: number
+}
 export interface IAxiosInstanceMethod {
     squashUploader: (format: TFormat, data: IData) => Promise<IApiResponse<ISquashResult>>,
     squashWithBlob: (format: TFormat, data: IData) => Promise<IApiResponse<Blob>>,

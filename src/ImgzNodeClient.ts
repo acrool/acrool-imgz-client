@@ -1,5 +1,5 @@
-import {createAxiosInstance, IAxiosInstanceMethod} from './fetcher';
-import {ISquashOptions, TFormat} from './types';
+import {createAxiosInstance, IAxiosInstanceMethod, IAxiosInstanceOptions} from './fetcher';
+import {IClientOptions, ISquashOptions, TFormat} from './types';
 import * as fs from 'fs';
 import {saveFile} from './utils';
 import {SystemException} from './exception';
@@ -7,12 +7,18 @@ import {SystemException} from './exception';
 
 class ImgzClient {
     private axiosInstance: IAxiosInstanceMethod;
+
     private sourceFile?: fs.ReadStream;
+    private quality?: number;
     private format?: TFormat;
     private saveOperations: Array<Promise<string>> = [];
 
-    constructor(baseURL?: string) {
-        this.axiosInstance = createAxiosInstance(baseURL);
+    constructor(baseURL?: string, options?: IClientOptions) {
+
+        const axiosInstanceOptions: IAxiosInstanceOptions = {
+            timeout: options?.timeout,
+        };
+        this.axiosInstance = createAxiosInstance(baseURL, axiosInstanceOptions);
     }
 
 
@@ -63,12 +69,13 @@ class ImgzClient {
     ) {
 
         const savePromise: Promise<string> = new Promise(async (resolve, reject): Promise<void> => {
-            try {
-                if(!(this.format && this.sourceFile)){
-                    throw new SystemException({message: 'You must first call the squash[Format] method before calling toSave()', code: 'NO_CALL_SAVE'});
-                }
+            if(!(this.format && this.sourceFile)){
+                return reject(new SystemException({message: 'You must first call the squash[Format] method before calling toSave()', code: 'NO_CALL_SAVE'}));
+            }
 
+            try {
                 const requestData = {
+                    quality: this.quality,
                     ...options,
                     sourceFile: this.sourceFile,
                 };
@@ -84,7 +91,6 @@ class ImgzClient {
         });
 
         // 保存这个操作到数组中
-        console.log('this.saveOperations', this.saveOperations);
         this.saveOperations.push(savePromise);
 
         return this;
@@ -97,6 +103,10 @@ class ImgzClient {
     async completeAll() {
         const results = await Promise.all(this.saveOperations);
         this.saveOperations = [];
+        this.format = undefined;
+        this.sourceFile = undefined;
+        this.quality = undefined;
+
         return results;
     }
 

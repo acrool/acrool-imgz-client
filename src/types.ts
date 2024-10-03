@@ -4,10 +4,14 @@ export interface IResize {
     height?: number
 }
 
-
 export interface ISquashOptions {
     resize?: IResize;
     quality?: number;
-    // savePath?: string;
 }
 export type TFormat = 'jpg'|'png'|'webp';
+
+
+export interface IClientOptions {
+    quality?: number;
+    timeout?: number;
+}

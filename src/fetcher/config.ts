@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {interceptorsResponseFulfilled, interceptorsResponseReject} from './interceptors';
 import {TFormat} from '../types';
-import {IApiResponse, IAxiosInstanceMethod, IData, ISquashResult, TResponseType} from './types';
+import {IApiResponse, IAxiosInstanceMethod, IAxiosInstanceOptions, IData, ISquashResult, TResponseType} from './types';
 
 
 export const requestHeader = {
@@ -10,7 +10,7 @@ export const requestHeader = {
     json: {'Content-Type': 'application/json'},
 };
 
-export const createAxiosInstance = (baseURL?: string, timout?: number): IAxiosInstanceMethod => {
+export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOptions): IAxiosInstanceMethod => {
     const axiosInstance = axios.create({
         baseURL,
         method: 'POST',
@@ -20,7 +20,7 @@ export const createAxiosInstance = (baseURL?: string, timout?: number): IAxiosIn
             'X-Requested-With': 'XMLHttpRequest',
             // Extend Headers...
         },
-        timeout: timout ?? 1200 * 1000,
+        timeout: options?.timeout ?? 1200 * 1000,
     });
 
     axiosInstance.interceptors.response.use(interceptorsResponseFulfilled, interceptorsResponseReject);

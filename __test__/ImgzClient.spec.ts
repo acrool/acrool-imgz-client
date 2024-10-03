@@ -61,7 +61,7 @@ describe('Test for real server', () => {
     const uploadIOPath = path.join(__dirname, './out/sample.webp');
     const uploadIOThumbPath = path.join(__dirname, './out/sample_thumb.webp');
 
-    afterAll(() => {
+    beforeAll(() => {
         // 清理測試檔案
         if (fs.existsSync(uploadIOPath)) {
             fs.unlinkSync(uploadIOPath);
