@@ -21,7 +21,8 @@
   "exports": {
     ".": {
       "browser": "./dist/acrool-imgz-client.es.js",
-      "import": "./dist/acrool-imgz-client.es.js"
+      "import": "./dist/acrool-imgz-client.es.js",
+      "require": "./dist/acrool-imgz-client.cjs.js"
     }
   },
   "files": [
