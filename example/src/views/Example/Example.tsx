@@ -15,7 +15,7 @@ const Example = () => {
     const logRef = useRef<HTMLDivElement>(null);
     const [blobImg, setBlobImg] = useState<string>();
 
-    const HookForm = useForm<{sourceFile}>();
+    const HookForm = useForm<IForm>();
 
     /**
      * 送出表單

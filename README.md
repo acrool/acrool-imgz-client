@@ -33,17 +33,56 @@ yarn add @acrool/imgz-client
 
 ## Examples
 
-use in your page/component:
+use in your nodejs code:
+
 ```ts
-import {ImgzClient} from '@acrool/imgz-client';
+import {ImgzNodeClient} from '@acrool/imgz-client';
 
-const imgzClient = new ImgzClient(imageSquashUrl);
+const imgzClient = new ImgzNodeClient('http://localhost:8081');
 
+const options = {
+    resize: {width: 500},
+    quality: 90,
+};
+const thumbOptions = {
+    resize: {width: 100},
+    quality: 80,
+};
 await imgzClient
     .squashWebp(filePath)
     .toSave(uploadIOThumbPath, thumbOptions)
     .toSave(uploadIOPath, options)
     .completeAll();
+```
+
+
+use in your browser frontend code:
+
+```ts
+import {ImgzClient} from '@acrool/imgz-client';
+import {SubmitHandler, useForm} from 'react-hook-form';
+
+interface IForm {
+    sourceFile: File
+}
+
+const Example = () => {
+    const HookForm = useForm<{sourceFile}>();
+    
+    const handleSubmitHandler: SubmitHandler<IForm> = async formData => {
+        const imgzClient = new ImgzClient();
+    
+        const options = {
+            resize: {width: 250},
+            quality: 90,
+            timeout: 10000,  // Example timeout
+        };
+        await imgzClient
+            .squashWebp(formData.sourceFile[0], options)
+            .then(setBlobImg);
+    
+    };
+}
 ```
 
 
