@@ -7,7 +7,6 @@
     "axios",
     "acrool-imgz"
   ],
-  "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -16,6 +15,7 @@
   "engines": {
     "node": ">=14"
   },
+  "main": "./dist/acrool-imgz-client.cjs.js",
   "module": "./dist/acrool-imgz-client.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
