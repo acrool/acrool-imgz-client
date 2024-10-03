@@ -60,12 +60,8 @@ const image = 'imagine10255/acrool-imgz-api:latest';
 describe('Test for real server', () => {
 
     test('squash should compress an image and save it to the specified path', async () => {
-
         const filePath = path.join(__dirname, './assets/sample.jpg');
-        const uploadIOPath = path.join(__dirname, './out');
-
-        // const d = await axios.get('http://localhost:8081/api/squash');
-        // console.log('d', d);
+        const uploadIOPath = path.join(__dirname, './out/sample.webp');
 
         const imgzClient = new ImgzClient('http://localhost:8081');
 
@@ -79,7 +75,6 @@ describe('Test for real server', () => {
             .then(client => {
                 client.save(uploadIOPath);
             });
-
 
         expect(filePath).toEqual(uploadIOPath);
     });

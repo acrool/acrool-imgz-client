@@ -3,9 +3,16 @@ import * as fs from 'fs';
 /**
  * 儲存檔案
  * @param saveResult
- * @param saveToPath
  */
-export const saveFile = async (saveResult: ArrayBuffer, saveToPath: string): Promise<void> => {
-    const buffer = Buffer.from(saveResult);
-    fs.writeFileSync(saveToPath, buffer);
+export const saveFile =  (saveResult: ArrayBuffer) => {
+    return async (saveToPath: string) => {
+        try {
+            const buffer = Buffer.from(saveResult);
+            fs.writeFileSync(saveToPath, buffer);
+
+            console.log('File saved successfully:', saveToPath);
+        } catch (error) {
+            console.log('Error downloading file:', error);
+        }
+    };
 };

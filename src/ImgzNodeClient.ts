@@ -20,11 +20,9 @@ class ImgzClient {
             ...options,
             sourceFile: fs.createReadStream(sourceFilePath),
         };
-
         const response = await this.axiosInstance.squashWithArrayBuffer(format, requestData);
-        
         return {
-            save: (saveToPath: string) => saveFile(response.data, saveToPath)
+            save: saveFile(response.data)
         };
     }
 
