@@ -39,14 +39,11 @@ import {ImgzClient} from '@acrool/imgz-client';
 
 const imgzClient = new ImgzClient(imageSquashUrl);
 
-imgzClient
-    .squashWebp(filePath, uploadIOPath, {quality, resize})
-    .catch(e => {
-        logRef.current.append('\ncatch...');
-    })
-    .finally(() => {
-        logRef.current.append('\nfinally...');
-    });
+await imgzClient
+    .squashWebp(filePath)
+    .toSave(uploadIOThumbPath, thumbOptions)
+    .toSave(uploadIOPath, options)
+    .completeAll();
 ```
 
 

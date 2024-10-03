@@ -59,6 +59,7 @@ const image = 'imagine10255/acrool-imgz-api:latest';
 describe('Test for real server', () => {
     const filePath = path.join(__dirname, './assets/sample.jpg');
     const uploadIOPath = path.join(__dirname, './out/sample.webp');
+    const uploadIOThumbPath = path.join(__dirname, './out/sample_thumb.webp');
 
     afterAll(() => {
         // 清理測試檔案
@@ -72,16 +73,21 @@ describe('Test for real server', () => {
         const imgzClient = new ImgzClient('http://localhost:8081');
 
         const options = {
-            resize: {width: 250},
+            resize: {width: 500},
             quality: 90,
-            timeout: 10000,  // Example timeout
+        };
+        const thumbOptions = {
+            resize: {width: 100},
+            quality: 80,
         };
         await imgzClient
-            .squashWebp(filePath, options)
-            .then(client => {
-                client.save(uploadIOPath);
-            });
+            .squashWebp(filePath)
+            .toSave(uploadIOThumbPath, thumbOptions)
+            .toSave(uploadIOPath, options)
+            .completeAll();
 
+
+        expect(fs.existsSync(uploadIOThumbPath)).toBe(true);
         expect(fs.existsSync(uploadIOPath)).toBe(true);
     });
 });
