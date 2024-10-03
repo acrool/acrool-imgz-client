@@ -23,7 +23,7 @@
 ## Features
 
 - Use axios as the driver for client requests
-- Need to set up acrool imgz api server (acrool/acrool-imgz-api)[https://github.com/acrool/acrool-imgz-api]
+- Need to set up acrool imgz api server [acrool/acrool-imgz-api](https://github.com/acrool/acrool-imgz-api)
 
 ## Installation
 
