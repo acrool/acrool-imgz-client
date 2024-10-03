@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import Logger from '@acrool/js-logger';
 
 /**
  * 儲存檔案
@@ -10,9 +11,8 @@ export const saveFile =  (saveResult: ArrayBuffer) => {
             const buffer = Buffer.from(saveResult);
             fs.writeFileSync(saveToPath, buffer);
 
-            console.log('File saved successfully:', saveToPath);
         } catch (error) {
-            console.log('Error downloading file:', error);
+            Logger.danger('Error downloading file:', error);
         }
     };
 };

@@ -1,8 +1,7 @@
 import * as path from 'path';
 import Docker from 'dockerode';
-import {saveFile} from '../src/utils';
 import ImgzClient from '../src/ImgzNodeClient';
-import axios from 'axios';
+import * as fs from 'fs';
 
 const docker = new Docker();
 const image = 'imagine10255/acrool-imgz-api:latest';
@@ -58,10 +57,17 @@ const image = 'imagine10255/acrool-imgz-api:latest';
 
 
 describe('Test for real server', () => {
+    const filePath = path.join(__dirname, './assets/sample.jpg');
+    const uploadIOPath = path.join(__dirname, './out/sample.webp');
 
+    afterAll(() => {
+        // 清理測試檔案
+        if (fs.existsSync(uploadIOPath)) {
+            fs.unlinkSync(uploadIOPath);
+        }
+    });
+    
     test('squash should compress an image and save it to the specified path', async () => {
-        const filePath = path.join(__dirname, './assets/sample.jpg');
-        const uploadIOPath = path.join(__dirname, './out/sample.webp');
 
         const imgzClient = new ImgzClient('http://localhost:8081');
 
@@ -76,6 +82,6 @@ describe('Test for real server', () => {
                 client.save(uploadIOPath);
             });
 
-        expect(filePath).toEqual(uploadIOPath);
+        expect(fs.existsSync(uploadIOPath)).toBe(true);
     });
 });
