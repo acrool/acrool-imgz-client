@@ -1,6 +1,7 @@
 import {AxiosResponse} from 'axios';
 import {ISquashOptions, TFormat} from '../types';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
+import {Readable} from 'stream';
 
 
 export interface IAxiosInterceptorResponseUse<V = AxiosResponse<IApiResponse>> {
@@ -16,7 +17,7 @@ export interface IApiResponse<D = any> {
 
 
 export interface IData extends ISquashOptions {
-    sourceFile: File|fs.ReadStream;
+    sourceFile: File|fs.ReadStream|Readable;
 }
 
 
@@ -29,7 +30,7 @@ export interface ISquashResult {
     squashRate: number
 }
 
-export type TResponseType = 'blob'|'arraybuffer';
+export type TResponseType = 'blob'|'arraybuffer'|'stream';
 
 
 export interface IAxiosInstanceOptions {
@@ -39,4 +40,5 @@ export interface IAxiosInstanceMethod {
     squashUploader: (format: TFormat, data: IData) => Promise<IApiResponse<ISquashResult>>,
     squashWithBlob: (format: TFormat, data: IData) => Promise<IApiResponse<Blob>>,
     squashWithArrayBuffer: (format: TFormat, data: IData) => Promise<IApiResponse<ArrayBuffer>>,
+    squashWithStream: (format: TFormat, data: IData) => Promise<IApiResponse<Readable>>,
 }
