@@ -24,12 +24,18 @@ export default defineConfig(({mode}) => {
             rollupOptions: {
                 output: {
                     exports: 'named',
+                    globals: {
+                        'node:fs': 'fs',
+                    },
                 },
+                external: [
+                    'node:fs'
+                ],
             },
             outDir: 'dist',
             lib: {
                 entry: path.resolve(__dirname, 'src/index.ts'),
-                formats: ['es', 'cjs'],
+                formats: ['es'],
                 fileName: (format,entryName) => `acrool-imgz-client.${format}.js`,
             }
         },

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {interceptorsResponseFulfilled, interceptorsResponseReject} from './interceptors';
 import {TFormat} from '../types';
 import {IApiResponse, IAxiosInstanceMethod, IAxiosInstanceOptions, IData, ISquashResult, TResponseType} from './types';
+import {Readable} from 'stream';
 
 
 export const requestHeader = {
@@ -10,7 +11,7 @@ export const requestHeader = {
     json: {'Content-Type': 'application/json'},
 };
 
-export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOptions): IAxiosInstanceMethod => {
+export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOptions) => {
     const axiosInstance = axios.create({
         baseURL,
         method: 'POST',
@@ -31,7 +32,7 @@ export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOp
      * @param format
      * @param data
      */
-    const squashUploader = (format: TFormat, data: IData): Promise<IApiResponse<ISquashResult>> => {
+    const squashUploader: IAxiosInstanceMethod['squashUploader'] = (format, data) => {
         return axiosInstance({
             url: `/api/squash/${format}/upload`,
             data,
@@ -60,7 +61,7 @@ export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOp
      * @param format
      * @param data
      */
-    const squashWithBlob = (format: TFormat, data: IData): Promise<IApiResponse<Blob>> => {
+    const squashWithBlob: IAxiosInstanceMethod['squashWithBlob'] = (format, data) => {
         return squash<Blob>(format, data, 'blob');
     };
 
@@ -70,13 +71,24 @@ export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOp
      * @param format
      * @param data
      */
-    const squashWithArrayBuffer = (format: TFormat, data: IData): Promise<IApiResponse<ArrayBuffer>> => {
+    const squashWithArrayBuffer: IAxiosInstanceMethod['squashWithArrayBuffer'] = (format, data) => {
         return squash<ArrayBuffer>(format, data, 'arraybuffer');
+    };
+
+    /**
+     * 處理圖片 並儲存於伺服器
+     * 回傳圖片處理結果 (不會將圖片本身回傳)
+     * @param format
+     * @param data
+     */
+    const squashWithStream: IAxiosInstanceMethod['squashWithStream'] = (format, data) => {
+        return squash<Readable>(format, data, 'stream');
     };
 
     return {
         squashUploader,
         squashWithBlob,
         squashWithArrayBuffer,
+        squashWithStream,
     };
 };

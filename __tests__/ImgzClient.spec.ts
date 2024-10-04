@@ -1,7 +1,7 @@
 import * as path from 'path';
 import Docker from 'dockerode';
 import ImgzClient from '../src/ImgzNodeClient';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 describe('Test for mock server', () => {
     let container: Docker.Container;
