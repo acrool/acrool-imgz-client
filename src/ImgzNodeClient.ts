@@ -1,7 +1,6 @@
 import {createAxiosInstance, IAxiosInstanceMethod, IAxiosInstanceOptions} from './fetcher';
 import {IClientOptions, ISquashOptions, TFormat} from './types';
 import * as fs from 'node:fs';
-import {saveFileWithBuffer, saveFileWithStream} from './utils';
 import {SystemException} from './exception';
 
 

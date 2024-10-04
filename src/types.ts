@@ -2,6 +2,8 @@
 export interface IResize {
     width?: number
     height?: number
+    maintainAspectRatio?: 'width'|'height'|'min'|'max';
+    ignoreOverSize?: boolean;
 }
 
 export interface ISquashOptions {
