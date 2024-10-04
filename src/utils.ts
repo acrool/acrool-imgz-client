@@ -1,5 +1,5 @@
 import * as fs from 'node:fs';
-import {Readable} from "stream";
+import {Readable} from 'stream';
 
 /**
  * 儲存檔案

@@ -3,6 +3,7 @@ import {interceptorsResponseFulfilled, interceptorsResponseReject} from './inter
 import {TFormat} from '../types';
 import {IApiResponse, IAxiosInstanceMethod, IAxiosInstanceOptions, IData, ISquashResult, TResponseType} from './types';
 import {Readable} from 'stream';
+import {objToFormData} from './utils';
 
 
 export const requestHeader = {
@@ -35,7 +36,7 @@ export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOp
     const squashUploader: IAxiosInstanceMethod['squashUploader'] = (format, data) => {
         return axiosInstance({
             url: `/api/squash/${format}/upload`,
-            data,
+            data: objToFormData(data),
             responseType: 'json',
         });
     };
@@ -50,7 +51,7 @@ export const createAxiosInstance = (baseURL?: string, options?: IAxiosInstanceOp
     const squash = <T>(format: TFormat, data: IData, responseType: TResponseType): Promise<IApiResponse<T>> => {
         return axiosInstance({
             url: `/api/squash/${format}`,
-            data,
+            data: objToFormData(data),
             responseType,
         });
     };

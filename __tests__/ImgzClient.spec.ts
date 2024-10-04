@@ -2,6 +2,7 @@ import * as path from 'path';
 import Docker from 'dockerode';
 import ImgzClient from '../src/ImgzNodeClient';
 import * as fs from 'node:fs';
+import {ISquashOptions} from '../src';
 
 describe('Test for mock server', () => {
     let container: Docker.Container;
@@ -44,7 +45,7 @@ describe('Test for mock server', () => {
     const uploadIOThumbPath = path.join(__dirname, './out/sample_thumb.webp');
 
     test('squash should compress an image and save it to the specified path', async () => {
-        const imgzClient = new ImgzClient('http://localhost:8082');
+        const imgzClient = new ImgzClient('http://localhost:8081');
 
         const options = {
             resize: {width: 500},
@@ -82,14 +83,14 @@ describe('Test for real server', () => {
     
     test('squash should compress an image and save it to the specified path', async () => {
 
-        const imgzClient = new ImgzClient('http://localhost:8082');
+        const imgzClient = new ImgzClient('http://localhost:8083');
 
-        const options = {
-            resize: {width: 500},
+        const options: ISquashOptions = {
+            resize: {width: 1000, height: 1000, ignoreOverSize: true,  maintainAspectRatio: 'min'},
             quality: 90,
         };
-        const thumbOptions = {
-            resize: {width: 100},
+        const thumbOptions: ISquashOptions = {
+            resize: {width: 100, height: 100,  ignoreOverSize: true, maintainAspectRatio: 'min'},
             quality: 80,
         };
         imgzClient

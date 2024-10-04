@@ -17,7 +17,7 @@ export interface IApiResponse<D = any> {
 
 
 export interface IData extends ISquashOptions {
-    sourceFile: File|fs.ReadStream|Readable;
+    sourceFile: File|Readable;
 }
 
 
