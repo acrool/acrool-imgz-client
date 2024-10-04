@@ -44,7 +44,6 @@ export function objToFormData(data: { [key: string]: any }): FormData {
         
         for (const [key, value] of Object.entries(whileData)) {
             const formKey = parentKey ? `${parentKey}[${key}]` : key;
-            console.log('value', formKey, value);
 
             if (Array.isArray(value)) {
                 value.forEach((item, index) => {
