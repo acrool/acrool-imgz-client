@@ -108,13 +108,11 @@ class ImgzClient {
 
     /**
      * 儲存
-     * @param saveFilePath
      * @param options
      */
     public toBase64(
-        saveFilePath: string,
         options?: ISquashOptions
-    ) {
+    ): Promise<string> {
 
         return new Promise(async (resolve, reject): Promise<void> => {
             if(!(this.format && this.sourceFile)){
