@@ -34,5 +34,5 @@
     "node_modules",
     "**/*.spec.ts"
   ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.vite.json" }]
 }

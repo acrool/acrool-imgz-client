@@ -1,7 +1,7 @@
 import {createAxiosInstance, IAxiosInstanceMethod, IAxiosInstanceOptions} from './fetcher';
 import {IClientOptions, ISquashOptions, TFormat} from './types';
-import * as fs from 'fs';
-import {saveFile} from './utils';
+import * as fs from 'node:fs';
+import {saveFileWithBuffer, saveFileWithStream} from './utils';
 import {SystemException} from './exception';
 
 
@@ -80,9 +80,19 @@ class ImgzClient {
                     sourceFile: this.sourceFile,
                 };
 
-                const response = await this.axiosInstance.squashWithArrayBuffer(this.format, requestData);
-                saveFile(response.data, saveFilePath);
-                resolve(saveFilePath);
+                this.axiosInstance.squashWithStream(this.format, requestData)
+                    .then(response => {
+                        return response.data
+                            .pipe(fs.createWriteStream(saveFilePath))
+                            .on('finish', () => resolve(saveFilePath))
+                            .on('error', (e) => reject(e));
+                    })
+                    .catch(response => {
+                        reject({
+                            code: response.code,
+                            message: response.message,
+                        });
+                    });
 
             } catch (error) {
                 console.error('Error:', error);
@@ -94,6 +104,51 @@ class ImgzClient {
         this.saveOperations.push(savePromise);
 
         return this;
+    }
+
+
+    /**
+     * 儲存
+     * @param saveFilePath
+     * @param options
+     */
+    public toBase64(
+        saveFilePath: string,
+        options?: ISquashOptions
+    ) {
+
+        return new Promise(async (resolve, reject): Promise<void> => {
+            if(!(this.format && this.sourceFile)){
+                return reject(new SystemException({message: 'You must first call the squash[Format] method before calling toSave()', code: 'NO_CALL_SAVE'}));
+            }
+
+            try {
+                const requestData = {
+                    quality: this.quality,
+                    ...options,
+                    sourceFile: this.sourceFile,
+                };
+
+                this.axiosInstance.squashWithArrayBuffer(this.format, requestData)
+                    .then(response => {
+                        // 將二進制數據轉換為 Base64 字符串
+                        const base64 = Buffer.from(response.data).toString('base64');
+                        resolve(base64);
+
+                    })
+                    .catch(response => {
+                        reject({
+                            code: response.code,
+                            message: response.message,
+                        });
+                    });
+
+            } catch (error) {
+                console.error('Error:', error);
+                reject(error); // 处理错误
+            }
+        });
+
     }
 
 
