@@ -1,6 +1,6 @@
 {
   "name": "@acrool/imgz-client",
-  "version": "0.0.3-alpha.2",
+  "version": "0.0.3-alpha.3",
   "description": "This is a Client of the acrool-imgz api server, which can isolate its core from the impact of the environment version.",
   "keywords": [
     "typescript",
