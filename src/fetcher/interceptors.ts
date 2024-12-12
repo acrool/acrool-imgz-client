@@ -17,5 +17,11 @@ export const interceptorsResponseFulfilled: IAxiosInterceptorResponseUse['onFulf
  * @param error
  */
 export const interceptorsResponseReject: IAxiosInterceptorResponseUse['onRejected'] = (error) => {
-    return Promise.reject(getSystemError(error.response));
+    return Promise.reject(
+        error.response ? getSystemError(error.response):
+            {
+                message: error.message,
+                code: 'IMGZ_ERROR',
+            }
+    );
 };
