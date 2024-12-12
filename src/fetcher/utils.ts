@@ -18,7 +18,7 @@ export const getSystemError = (response: AxiosResponse) => {
     const firstError = response?.data;
     return new SystemException({
         message: firstError?.message ?? response?.statusText ?? JSON.stringify(response),
-        code: firstError?.statusCode ?? `HTTP_CODE_${response.status}`,
+        code: firstError?.statusCode ?? response?.status ? `HTTP_CODE_${response.status}`: 'NO_CODE',
         // path: firstError?.path
     });
 };
