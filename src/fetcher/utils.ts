@@ -17,7 +17,7 @@ import * as fs from 'node:fs';
 export const getSystemError = (response: AxiosResponse) => {
     const firstError = response?.data;
     return new SystemException({
-        message: firstError?.message ?? response.statusText,
+        message: firstError?.message ?? response?.statusText ?? JSON.stringify(response),
         code: firstError?.statusCode ?? `HTTP_CODE_${response.status}`,
         // path: firstError?.path
     });
