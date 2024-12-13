@@ -16,12 +16,20 @@ export const interceptorsResponseFulfilled: IAxiosInterceptorResponseUse['onFulf
  * (不屬於2XX-3XX)
  * @param error
  */
-export const interceptorsResponseReject: IAxiosInterceptorResponseUse['onRejected'] = (error) => {
-    return Promise.reject(
-        error.response ? getSystemError(error.response):
-            {
-                message: error.message,
-                code: 'IMGZ_ERROR',
-            }
-    );
+export const interceptorsResponseReject: IAxiosInterceptorResponseUse['onRejected'] = async (error) => {
+    const contentType = error.response?.headers['content-type'];
+    const responseType = error.config.responseType;
+    if (responseType === 'stream' && contentType && contentType.includes('application/json')) {
+        // 將流轉換為 JSON
+        const chunks = [];
+        for await (const chunk of error.response.data) {
+            chunks.push(chunk);
+        }
+        const errorJson = JSON.parse(Buffer.concat(chunks).toString());
+
+        return Promise.reject(getSystemError(
+            {...error.response, data: errorJson},
+        ));
+    }
+    return Promise.reject(getSystemError(error.response));
 };

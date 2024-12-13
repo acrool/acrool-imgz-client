@@ -87,7 +87,7 @@ class ImgzClient {
                             .on('error', (e) => reject(e));
                     })
                     .catch(response => {
-                        reject({
+                        return reject({
                             code: response.code,
                             message: response.message,
                         });
